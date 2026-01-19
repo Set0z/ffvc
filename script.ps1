@@ -1,38 +1,37 @@
 function Video_chose{
     Clear-History
-    Write-Host "Выберите видеофайл для сжатия`n"
+    Write-Host "Select video file to compress"
 
     Add-Type -AssemblyName System.Windows.Forms
     $openFileDialog = New-Object System.Windows.Forms.OpenFileDialog
-    $openFileDialog.Filter = "Видео (*.mp4)|*.mp4"
-    $openFileDialog.Title = "Выберите видеофайл"
+    $openFileDialog.Filter = "VIdo (*.mp4)|*.mp4"
+    $openFileDialog.Title = "Select video file"
     if ($openFileDialog.ShowDialog() -eq [System.Windows.Forms.DialogResult]::OK) {
         $inputFile = $openFileDialog.FileName
     } else {
-        Write-Host "Файл не выбран. Выход...`n"
+        Write-Host "No file selected. Exit..."
         pause
         exit
     }
     
 
     Clear-History
-    Write-Host "Выберите место для сохранения`n"
+    Clear-Host
+    Write-Host "Select a save location"
 
     Add-Type -AssemblyName System.Windows.Forms
 
-    # Создаем диалоговое окно для сохранения файла
     $saveFileDialog = New-Object System.Windows.Forms.SaveFileDialog
-    $saveFileDialog.Filter = "Видео (*.mp4)|*.mp4"
-    $saveFileDialog.Title = "Выберите место для сохранения файла"
+    $saveFileDialog.Filter = "Video (*.mp4)|*.mp4"
+    $saveFileDialog.Title = "Select a location to save the file"
     $DesktopPath = $env:USERPROFILE + "\Desktop"
     $saveFileDialog.InitialDirectory = $DesktopPath
 
-    # Если пользователь выбрал файл и нажал "Сохранить"
     if ($saveFileDialog.ShowDialog() -eq [System.Windows.Forms.DialogResult]::OK) {
         $outputFile = $saveFileDialog.FileName
-        Write-Host "Выбранный путь для сохранения файла: $outputFile"
+        Write-Host "Selected path to save the file: $outputFile"
     } else {
-        Write-Host "Файл не выбран. Выход...`n"
+        Write-Host "No file selected. Exit..."
         pause
         exit
     }
@@ -45,18 +44,18 @@ try {
     ffmpeg -h > $null 2>&1
 }
 catch {
-    Write-Host "Путь к ffmpeg не установлен!"
-    Write-Host "Выберите путь к ffmpeg.exe`n"
+    Write-Host "The path to ffmpeg is not set!"
+    Write-Host "Select the path to ffmpeg.exe"
 
 
     Add-Type -AssemblyName System.Windows.Forms
     $openFileDialog = New-Object System.Windows.Forms.OpenFileDialog
     $openFileDialog.Filter = "ffmpeg (*.exe)|ffmpeg.exe"
-    $openFileDialog.Title = "Выберите файл ffmpeg.exe"
+    $openFileDialog.Title = "Select file ffmpeg.exe"
     if ($openFileDialog.ShowDialog() -eq [System.Windows.Forms.DialogResult]::OK) {
         $ffmpegDir = [System.IO.Path]::GetDirectoryName($openFileDialog.FileName)
     } else {
-        Write-Host "Файл не выбран. Выход...`n"
+        Write-Host "No file selected. Exit..."
         pause
         exit
     }
@@ -76,14 +75,14 @@ catch {
 
     & $ffmpegDir -i "$inputFile" -c:v $($config.videoCodec) -preset $($config.preset) -b:v $($config.bitrateVideo) -c:a $($config.audioCodec) -b:a $($config.bitrateAudio) -movflags $($config.movflags) "$outputFile"
 
-    Write-Host "`n`n`n`nГотово!"
+    Write-Host "`n`n`n`nDone!"
     pause
     exit
 
 }
 
 
-# Чтение конфигурации из файла
+# Р§С‚РµРЅРёРµ РєРѕРЅС„РёРіСѓСЂР°С†РёРё РёР· С„Р°Р№Р»Р°
 $configFile = $PSScriptRoot + "\config.json"
 $config = Get-Content -Path $configFile | ConvertFrom-Json
 
@@ -93,5 +92,4 @@ $inputFile = $result.inputFile
 $outputFile = $result.outputFile
 
 & ffmpeg -i "$inputFile" -c:v $($config.videoCodec) -preset $($config.preset) -b:v $($config.bitrateVideo) -c:a $($config.audioCodec) -b:a $($config.bitrateAudio) -movflags $($config.movflags) "$outputFile"
-Write-Host "`n`n`n`nГотово!"
-pause
+Write-Host "`n`n`n`nDone!"
