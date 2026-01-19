@@ -7,7 +7,7 @@
 > Вы можете запустить программу прямо из интернета, не загружая файл. Просто выполните команду в PowerShell:
 > 
 > ```powershell
-> irm "https://raw.githubusercontent.com/Set0z/yt-dlp-powershell-GUI-video-download/refs/heads/main/ytvd.ps1" | iex
+> irm "https://raw.githubusercontent.com/Set0z/ffvc/refs/heads/main/script.ps1" | iex
 > ```
 
 
