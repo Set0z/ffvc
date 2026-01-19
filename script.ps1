@@ -38,6 +38,8 @@ function Video_chose{
     return @{inputFile = $inputFile; outputFile = $outputFile}
 }
 
+if($PSScriptRoot -eq ""){Invoke-WebRequest https://raw.githubusercontent.com/Set0z/ffvc/refs/heads/main/config.json -OutFile "$($env:TEMP)\config.json" ; $configFile = "$($env:TEMP)\config.json"}else{$configFile = $PSScriptRoot + "\config.json"}
+
 
 
 try {
@@ -83,7 +85,6 @@ catch {
 
 
 # Чтение конфигурации из файла
-$configFile = $PSScriptRoot + "\config.json"
 $config = Get-Content -Path $configFile | ConvertFrom-Json
 
 
